@@ -14,7 +14,13 @@ steps:
     image: python:3.7.3
     commands:
         - pip install -r requirements.txt
-        - pytest
+        - pytest tests/unit/
+
+-   name: integrationtest
+    image: python:3.7.3
+    commands:
+        - pip install -r requirements.txt
+        - pytest tests/integration/
 
 -   name: publish
     image: plugins/docker
@@ -25,3 +31,8 @@ steps:
             from_secret: docker_username
         password:
             from_secret: docker_password
+
+
+services:
+-   name: db
+    image: postgres:12.1
