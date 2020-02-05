@@ -15,3 +15,9 @@ steps:
     commands:
         - pip install -r requirements.txt
         - pytest
+
+-   name: publish
+    image: plugins/docker
+    settings:
+        repo: anemeth/dronetest
+        tags: latest
