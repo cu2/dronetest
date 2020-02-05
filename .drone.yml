@@ -43,3 +43,49 @@ steps:
 services:
 -   name: db
     image: postgres:12.1
+
+
+
+---
+kind: pipeline
+type: docker
+name: secondary
+
+steps:
+-   name: fastgreeting
+    image: python:3.7.3
+    commands:
+        - python -c 'print("hi")'
+
+-   name: unittest
+    image: python:3.7.3
+    commands:
+        - pip install -r requirements.txt
+        - pytest tests/unit/
+
+-   name: integrationtest
+    image: python:3.7.3
+    commands:
+        - pip install -r requirements.txt
+        - pytest tests/integration/
+
+-   name: ping
+    image: redis
+    commands:
+        - redis-cli -h cache ping
+
+-   name: bye
+    image: python:3.7.3
+    commands:
+        - python -c 'print("bye")'
+    depends_on:
+        - fastgreeting
+        - unittest
+        - integrationtest
+        - ping
+
+services:
+-   name: db
+    image: postgres:12.1
+-   name: cache
+    image: redis
