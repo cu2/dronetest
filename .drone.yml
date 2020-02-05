@@ -47,6 +47,8 @@ services:
 trigger:
     branch:
         - master
+    event:
+        - push
 
 
 ---
