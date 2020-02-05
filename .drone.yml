@@ -44,6 +44,11 @@ services:
 -   name: db
     image: postgres:12.1
 
+trigger:
+    branch:
+        - master
+    event:
+        - push
 
 
 ---
@@ -89,3 +94,24 @@ services:
     image: postgres:12.1
 -   name: cache
     image: redis
+
+trigger:
+    event:
+        - push
+
+
+
+---
+kind: pipeline
+type: docker
+name: pullrequest
+
+steps:
+-   name: pr
+    image: python:3.7.3
+    commands:
+        - python -c 'print("pull request")'
+
+trigger:
+    event:
+        - pull_request
