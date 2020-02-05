@@ -21,3 +21,7 @@ steps:
     settings:
         repo: anemeth/dronetest
         tags: latest
+        username:
+            from_secret: docker_username
+        password:
+            from_secret: docker_password
