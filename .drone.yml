@@ -15,12 +15,16 @@ steps:
     commands:
         - pip install -r requirements.txt
         - pytest tests/unit/
+    depends_on:
+        - greeting
 
 -   name: integrationtest
     image: python:3.7.3
     commands:
         - pip install -r requirements.txt
         - pytest tests/integration/
+    depends_on:
+        - greeting
 
 -   name: publish
     image: plugins/docker
