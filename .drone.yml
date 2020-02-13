@@ -1,103 +1,103 @@
 ---
 kind: pipeline
 type: docker
-name: python
+name: publish
 
 steps:
--   name: greeting
-    image: python:3.7.3
-    commands:
-        - pip install -r requirements.txt
-        - python -c 'print("hello")'
+- name: greeting
+  image: python:3.7.3
+  commands:
+    - pip install -r requirements.txt
+    - python -c 'print("hello")'
 
--   name: unittest
-    image: python:3.7.3
-    commands:
-        - pip install -r requirements.txt
-        - pytest tests/unit/
-    depends_on:
-        - greeting
+- name: unittest
+  image: python:3.7.3
+  commands:
+    - pip install -r requirements.txt
+    - pytest tests/unit/
+  depends_on:
+    - greeting
 
--   name: integrationtest
-    image: python:3.7.3
-    commands:
-        - pip install -r requirements.txt
-        - pytest tests/integration/
-    depends_on:
-        - greeting
+- name: integrationtest
+  image: python:3.7.3
+  commands:
+    - pip install -r requirements.txt
+    - pytest tests/integration/
+  depends_on:
+    - greeting
 
--   name: publish
-    image: plugins/docker
-    settings:
-        repo: anemeth/dronetest
-        tags: latest
-        username:
-            from_secret: docker_username
-        password:
-            from_secret: docker_password
-    depends_on:
-        - greeting
-        - unittest
-        - integrationtest
+- name: publish
+  image: plugins/docker
+  settings:
+    repo: anemeth/dronetest
+    tags: latest
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+  depends_on:
+    - greeting
+    - unittest
+    - integrationtest
 
 services:
--   name: db
-    image: postgres:12.1
+- name: db
+  image: postgres:12.1
 
 trigger:
-    branch:
-        - master
-    event:
-        - push
+  branch:
+    - master
+  event:
+    - push
 
 
 ---
 kind: pipeline
 type: docker
-name: secondary
+name: test
 
 steps:
--   name: fastgreeting
-    image: python:3.7.3
-    commands:
-        - python -c 'print("hi")'
+- name: fastgreeting
+  image: python:3.7.3
+  commands:
+    - python -c 'print("hi")'
 
--   name: unittest
-    image: python:3.7.3
-    commands:
-        - pip install -r requirements.txt
-        - pytest tests/unit/
+- name: unittest
+  image: python:3.7.3
+  commands:
+    - pip install -r requirements.txt
+    - pytest tests/unit/
 
--   name: integrationtest
-    image: python:3.7.3
-    commands:
-        - pip install -r requirements.txt
-        - pytest tests/integration/
+- name: integrationtest
+  image: python:3.7.3
+  commands:
+    - pip install -r requirements.txt
+    - pytest tests/integration/
 
--   name: ping
-    image: redis
-    commands:
-        - redis-cli -h cache ping
+- name: ping
+  image: redis
+  commands:
+    - redis-cli -h cache ping
 
--   name: bye
-    image: python:3.7.3
-    commands:
-        - python -c 'print("bye")'
-    depends_on:
-        - fastgreeting
-        - unittest
-        - integrationtest
-        - ping
+- name: bye
+  image: python:3.7.3
+  commands:
+    - python -c 'print("bye")'
+  depends_on:
+    - fastgreeting
+    - unittest
+    - integrationtest
+    - ping
 
 services:
--   name: db
-    image: postgres:12.1
--   name: cache
-    image: redis
+- name: db
+  image: postgres:12.1
+- name: cache
+  image: redis
 
 trigger:
-    event:
-        - push
+  event:
+    - push
 
 
 
@@ -107,11 +107,11 @@ type: docker
 name: pullrequest
 
 steps:
--   name: pr
-    image: python:3.7.3
-    commands:
-        - python -c 'print("pull request")'
+- name: pr
+  image: python:3.7.3
+  commands:
+    - python -c 'print("pull request")'
 
 trigger:
-    event:
-        - pull_request
+  event:
+    - pull_request
