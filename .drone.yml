@@ -77,6 +77,7 @@ steps:
 - name: ping
   image: redis
   commands:
+    - ./tests/redis/test.sh cache
     - redis-cli -h cache ping
 
 - name: bye
