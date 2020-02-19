@@ -14,7 +14,7 @@ def raise_app_error():
 
 
 def test_inc():
-    assert inc(3) == 3
+    assert inc(3) == 4
 
 
 def test_raise_app_error():
